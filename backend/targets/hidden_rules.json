@@ -1,0 +1,18 @@
+{
+  "_warning": "Ground truth for the mock pricing target. Read ONLY by targets/pricing_api.py and the post-run reveal endpoint. The agents in autopsy/ never open this file; they reach the target over HTTP only.",
+  "base_price": 200,
+  "noise": 0.03,
+  "premium_postcodes": ["400001", "400050", "110003", "560001"],
+  "weekend_days": ["Sat", "Sun"],
+  "rules": [
+    { "id": "R1", "features": ["device"], "kind": "multiplicative", "text": "device == iPhone multiplies price by 1.12", "levels": ["iPhone"], "effect": 1.12 },
+    { "id": "R2", "features": ["age"], "kind": "threshold-additive", "text": "age > 60 adds ₹50", "threshold": 60, "effect": 50 },
+    { "id": "R3", "features": ["day_of_week", "hour"], "kind": "interaction", "text": "weekend AND hour >= 20 multiplies price by 1.5", "levels": ["Sat", "Sun"], "threshold": 20, "effect": 1.5 },
+    { "id": "R4", "features": ["postcode"], "kind": "multiplicative", "text": "premium postcode (400001, 400050, 110003, 560001) multiplies price by 1.20; premium postcodes correlate with high income", "levels": ["400001", "400050", "110003", "560001"], "effect": 1.2, "proxy_for": "income" }
+  ],
+  "decoys": [
+    { "id": "D1", "features": ["loyalty_tier"], "text": "loyalty_tier has no effect" },
+    { "id": "D2", "features": ["income"], "text": "income has no direct effect (it only correlates with premium postcodes)" },
+    { "id": "D3", "features": ["city"], "text": "city has no direct effect" }
+  ]
+}
